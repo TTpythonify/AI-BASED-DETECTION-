@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Video Detection</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #121212;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .upload-container {
+            background: #1E1E1E;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .file-input {
+            margin: 20px 0;
+            background: #2D2D2D;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px dashed #444;
+            cursor: pointer;
+            transition: border-color .3s;
+        }
+
+        .file-input:hover {
+            border-color: #00d9ff;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            cursor: pointer;
+            font-size: 16px;
+            color: #ccc;
+        }
+
+        .upload-btn {
+            background: #00d9ff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #00a7c7;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="upload-container">
+        <h1>AI Video Detection</h1>
+        <p>Upload a video for object/activity detection:</p>
+
+        <form method="POST" action="/" enctype="multipart/form-data">
+            <div class="file-input">
+                <label for="video">Click to Choose Video</label>
+                <input type="file" id="video" name="video" accept="video/*" required>
+            </div>
+
+            <button type="submit" class="upload-btn">Upload & Analyze</button>
+        </form>
+    </div>
+
+</body>
+</html>
