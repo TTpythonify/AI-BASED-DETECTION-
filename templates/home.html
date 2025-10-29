@@ -77,18 +77,44 @@
 <body>
 
     <div class="upload-container">
-        <h1>AI Video Detection</h1>
-        <p>Upload a video for object/activity detection:</p>
+    <h1>AI Video Detection</h1>
+    <p>Upload a video for object/activity detection:</p>
 
-        <form method="POST" action="/" enctype="multipart/form-data">
-            <div class="file-input">
-                <label for="video">Click to Choose Video</label>
-                <input type="file" id="video" name="video" accept="video/*" required>
-            </div>
+    <form method="POST" action="/" enctype="multipart/form-data">
+        <div class="file-input">
+            <label for="video" id="video-label">Click to Choose Video</label>
+            <input type="file" id="video" name="video" accept="video/*" required>
+        </div>
 
-            <button type="submit" class="upload-btn">Upload & Analyze</button>
-        </form>
+        <button type="submit" class="upload-btn">Upload & Analyze</button>
+    </form>
+
+    {% if processed_video %}
+    <div style="margin-top: 20px;">
+        <h3>Processed Video:</h3>
+        <video width="100%" controls>
+            <source src="{{ processed_video }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     </div>
+    {% endif %}
+</div>
+
+
 
 </body>
+
+<script>
+    const videoInput = document.getElementById('video');
+    const videoLabel = document.getElementById('video-label');
+
+    videoInput.addEventListener('change', () => {
+        if (videoInput.files.length > 0) {
+            videoLabel.textContent = `Selected Video: ${videoInput.files[0].name}`;
+        } else {
+            videoLabel.textContent = "Click to Choose Video";
+        }
+    });
+</script>
+
 </html>
