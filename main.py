@@ -47,7 +47,10 @@ def process_video(temp_filename, video_key):
     """
     # Run YOLO detection and save output
     results = model(temp_filename, save=True, conf=0.4)
-    yolo_output_path = results[0].path  # actual saved video
+
+    # Get the actual saved YOLO-processed file path
+    save_dir = results[0].save_dir
+    yolo_output_path = os.path.join(save_dir, os.path.basename(temp_filename))
 
     # Move YOLO output to predictable folder for Flask
     final_path = os.path.join(PROCESSED_FOLDER, f"{video_key}.mp4")
