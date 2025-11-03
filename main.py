@@ -1,7 +1,6 @@
 import os
 import uuid
 import shutil
-import redis
 from flask import Flask, render_template, request, flash
 from ultralytics import YOLO
 
@@ -16,7 +15,6 @@ PROCESSED_FOLDER = os.path.join(BASE_DIR, "static", "videos", "processed")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
-r = redis.Redis(host="localhost", port=6379, db=0)
 
 model = YOLO("yolov8n.pt")
 
@@ -65,7 +63,7 @@ def process_video(temp_filename, video_key):
 
     shutil.move(yolo_output_path, final_path)
 
-    # Return the URL Flask can serve (still uses the original extension)
+    # Return the URL Flask can serve 
     return f"/static/videos/processed/{video_key}{file_extension}"
 
 
