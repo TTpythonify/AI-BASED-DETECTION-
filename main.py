@@ -6,9 +6,9 @@ from flask import Flask, render_template, request, flash
 from ultralytics import YOLO
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"  # Required for flash messages
+app.secret_key = "supersecretkey"  
 
-# === Folders ===
+
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 PROCESSED_FOLDER = os.path.join(BASE_DIR, "static", "videos", "processed")
@@ -16,10 +16,8 @@ PROCESSED_FOLDER = os.path.join(BASE_DIR, "static", "videos", "processed")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
-# === Redis Connection ===
 r = redis.Redis(host="localhost", port=6379, db=0)
 
-# === Load YOLO Model Once ===
 model = YOLO("yolov8n.pt")
 
 
@@ -56,29 +54,33 @@ def home_page():
 
 
 def process_video(temp_filename, video_key):
-    """
-    Runs YOLO detection and returns a URL to the processed video
-    """
-    print(f"[INFO] Running YOLO on {temp_filename}...")
-
     # Run YOLO detection and save output
     results = model(source=temp_filename, save=True, conf=0.4)
+    print("\n\nSTEP 1. YOLO loaded\n\n")
 
-    # YOLO saves in something like runs/detect/predict*
-    save_dir = results[0].save_dir
-    predicted_name = os.path.basename(temp_filename)
-    yolo_output_path = os.path.join(save_dir, predicted_name)
+    # Get the actual YOLO output path (may be .avi)
+    yolo_output_path = str(results[0].path)
+    print(f"\n\nSTEP 2. YOLO saved at {yolo_output_path}\n\n")
 
     # Ensure the YOLO output file exists
     if not os.path.exists(yolo_output_path):
+        print("\n\nSTEP 3. File not found!\n\n")
         raise FileNotFoundError(f"Processed video not found at {yolo_output_path}")
 
-    # Move YOLO output to Flask static folder
-    final_path = os.path.join(PROCESSED_FOLDER, f"{video_key}.mp4")
+    print("\n\nSTEP 3. Found YOLO output\n\n")
+
+    # Move YOLO output to Flask static folder and keep the .avi extension
+    file_extension = os.path.splitext(yolo_output_path)[1]  # e.g., '.avi'
+    final_path = os.path.join(PROCESSED_FOLDER, f"{video_key}{file_extension}")
+
+    print(f"\n\nSTEP 4. Moving to {final_path}\n\n")
     shutil.move(yolo_output_path, final_path)
 
-    # Return the URL Flask can serve
-    return f"/static/videos/processed/{video_key}.mp4"
+    print("\n\nSTEP 5. Returning video URL\n\n")
+
+    # Return the URL Flask can serve (still uses the original extension)
+    return f"/static/videos/processed/{video_key}{file_extension}"
+
 
 
 if __name__ == "__main__":
